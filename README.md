@@ -34,11 +34,11 @@ A React application for managing financial goals, tracking progress, and making 
    npm install
    ```
 
-### Running the Application
+### Running the Application Locally
 
 1. Start the json-server (in one terminal):
    ```
-   npx json-server --watch db.json --port 3000
+   npm run server
    ```
 
 2. Start the React application (in another terminal):
@@ -47,6 +47,22 @@ A React application for managing financial goals, tracking progress, and making 
    ```
 
 3. Open your browser and navigate to the URL shown in your terminal (typically http://localhost:5173)
+
+### Deployment
+
+The application can be deployed to platforms like Vercel or Netlify:
+
+1. Build the application:
+   ```
+   npm run build
+   ```
+
+2. Deploy the `dist` folder to your hosting platform
+
+#### Notes for Deployment
+
+- When deployed without a backend, the application will use mock data
+- To connect to a real backend API, set the `VITE_API_URL` environment variable in your deployment platform
 
 ## Usage
 

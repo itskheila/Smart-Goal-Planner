@@ -1,8 +1,40 @@
 // API endpoints for interacting with json-server
-const BASE_URL = 'http://localhost:3000';
+// Use environment variable for API URL or fallback to localhost for development
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+// For deployment without a backend, use this mock data
+const mockGoals = [
+  {
+    "id": "1",
+    "name": "Travel Fund - Japan",
+    "targetAmount": 5000,
+    "savedAmount": 3200,
+    "category": "Travel",
+    "deadline": "2025-12-31",
+    "createdAt": "2024-01-15"
+  },
+  {
+    "id": "2",
+    "name": "Emergency Fund",
+    "targetAmount": 10000,
+    "savedAmount": 7500,
+    "category": "Emergency",
+    "deadline": "2026-06-30",
+    "createdAt": "2023-05-01"
+  }
+];
+
+// Check if we're in a deployed environment without a backend
+const isDeployedWithoutBackend = !import.meta.env.DEV && !import.meta.env.VITE_API_URL;
 
 // Fetch all goals
 export const fetchGoals = async () => {
+  // Use mock data if deployed without backend
+  if (isDeployedWithoutBackend) {
+    console.log('Using mock data for goals');
+    return Promise.resolve([...mockGoals]);
+  }
+  
   try {
     const response = await fetch(`${BASE_URL}/goals`);
     if (!response.ok) {
@@ -17,6 +49,17 @@ export const fetchGoals = async () => {
 
 // Add a new goal
 export const addGoal = async (goalData) => {
+  // Use mock data if deployed without backend
+  if (isDeployedWithoutBackend) {
+    console.log('Adding mock goal');
+    const newGoal = {
+      ...goalData,
+      id: String(Date.now())
+    };
+    mockGoals.push(newGoal);
+    return Promise.resolve(newGoal);
+  }
+  
   try {
     const response = await fetch(`${BASE_URL}/goals`, {
       method: 'POST',
@@ -37,6 +80,17 @@ export const addGoal = async (goalData) => {
 
 // Update a goal
 export const updateGoal = async (id, goalData) => {
+  // Use mock data if deployed without backend
+  if (isDeployedWithoutBackend) {
+    console.log('Updating mock goal');
+    const index = mockGoals.findIndex(goal => goal.id === id);
+    if (index !== -1) {
+      mockGoals[index] = { ...mockGoals[index], ...goalData };
+      return Promise.resolve(mockGoals[index]);
+    }
+    return Promise.reject(new Error('Goal not found'));
+  }
+  
   try {
     const response = await fetch(`${BASE_URL}/goals/${id}`, {
       method: 'PATCH',
@@ -57,6 +111,17 @@ export const updateGoal = async (id, goalData) => {
 
 // Delete a goal
 export const deleteGoal = async (id) => {
+  // Use mock data if deployed without backend
+  if (isDeployedWithoutBackend) {
+    console.log('Deleting mock goal');
+    const index = mockGoals.findIndex(goal => goal.id === id);
+    if (index !== -1) {
+      mockGoals.splice(index, 1);
+      return Promise.resolve(true);
+    }
+    return Promise.resolve(true);
+  }
+  
   try {
     const response = await fetch(`${BASE_URL}/goals/${id}`, {
       method: 'DELETE',
@@ -73,6 +138,17 @@ export const deleteGoal = async (id) => {
 
 // Make a deposit to a goal
 export const makeDeposit = async (id, amount) => {
+  // Use mock data if deployed without backend
+  if (isDeployedWithoutBackend) {
+    console.log('Making mock deposit');
+    const index = mockGoals.findIndex(goal => goal.id === id);
+    if (index !== -1) {
+      mockGoals[index].savedAmount += Number(amount);
+      return Promise.resolve({...mockGoals[index]});
+    }
+    return Promise.reject(new Error('Goal not found'));
+  }
+  
   try {
     // First, get the current goal to get the current savedAmount
     const goalResponse = await fetch(`${BASE_URL}/goals/${id}`);
