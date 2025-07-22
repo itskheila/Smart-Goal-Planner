@@ -38,9 +38,9 @@ const GoalCard = ({ goal, onDelete, onDeposit }) => {
       <h3>{goal.name}</h3>
       <div className="goal-details">
         <p>Category: {goal.category}</p>
-        <p>Target: ${goal.targetAmount.toLocaleString()}</p>
-        <p>Saved: ${goal.savedAmount.toLocaleString()}</p>
-        <p>Remaining: ${remainingAmount.toLocaleString()}</p>
+        <p>Target: Ksh {goal.targetAmount.toLocaleString()}</p>
+        <p>Saved: Ksh {goal.savedAmount.toLocaleString()}</p>
+        <p>Remaining: Ksh {remainingAmount.toLocaleString()}</p>
         <p>Deadline: {new Date(goal.deadline).toLocaleDateString()}</p>
         
         {isCompleted && <p className="status completed">Completed!</p>}
