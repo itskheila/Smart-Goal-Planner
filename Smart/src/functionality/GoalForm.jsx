@@ -20,17 +20,17 @@ const GoalForm = ({ onAddGoal }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Create a new goal object
+    // Creation of a new goal object
     const newGoal = {
       ...formData,
       savedAmount: 0,
       createdAt: new Date().toISOString().split('T')[0]
     };
     
-    // Call the onAddGoal function passed from parent
+    // Calling the onAddGoal function passed from parent
     onAddGoal(newGoal);
     
-    // Reset the form
+    // Resetting the form
     setFormData({
       name: '',
       targetAmount: '',

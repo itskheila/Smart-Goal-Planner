@@ -1,6 +1,6 @@
-/* ===== COLORS AND BASIC SETTINGS ===== */
+/* basic styling */
 :root {
-  /* Main colors used throughout the app */
+  
   --blue: #3498db;
   --green: #2ecc71;
   --orange: #f39c12;
@@ -10,12 +10,12 @@
   --success-green: #27ae60;
   --danger-red: #c0392b;
   
-  /* Common values */
+
   --rounded-corners: 8px;
   --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Reset default browser styles */
+
 * {
   margin: 0;
   padding: 0;

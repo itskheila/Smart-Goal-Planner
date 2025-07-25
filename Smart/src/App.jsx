@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './index.css';
 
 // Simple API functions
-const API_URL = 'https://my-json-server.typicode.com/YOUR_USERNAME/Smart-Goal-Planner';
+const API_URL = 'https://my-json-server.typicode.com/itskheila/Smart-Goal-Planner/goals';
+
 
 // Mock data for when deployed without backend
 const sampleGoals = [
