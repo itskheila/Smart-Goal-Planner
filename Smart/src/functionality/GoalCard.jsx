@@ -14,17 +14,17 @@ function GoalCard({ goal, onDelete, onDeposit }) {
  
   const remainingAmount = goal.targetAmount - goal.savedAmount;
 
-  // Calculate days left until deadline
+  
   const today = new Date();
   const deadlineDate = new Date(goal.deadline);
   const daysLeft = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
 
-  // Check goal status
+ 
   const isCompleted = goal.savedAmount >= goal.targetAmount;
   const isOverdue = daysLeft < 0 && !isCompleted;
   const isWarning = daysLeft <= 30 && daysLeft > 0 && !isCompleted;
 
-  // Handle deposit form submission
+ 
   const handleDepositSubmit = (e) => {
     e.preventDefault();
     if (depositAmount && Number(depositAmount) > 0) {
@@ -35,17 +35,23 @@ function GoalCard({ goal, onDelete, onDeposit }) {
   };
 
   // Determine card styling based on status
-  let cardClass = 'goal-card';
-  if (isCompleted) cardClass += ' completed';
-  if (isOverdue) cardClass += ' overdue';
-  if (isWarning) cardClass += ' warning';
+  const cardClass = (() => {
+    if (isCompleted) {
+      return 'goal-card completed';
+    } else if (isOverdue) {
+      return 'goal-card overdue';
+    } else if (isWarning) {
+      return 'goal-card warning';
+    } else {
+      return 'goal-card';
+    }
+  })();
 
   return (
     <div className={cardClass}>
-      {/* Goal title */}
       <h3>{goal.name}</h3>
       
-      {/* Goal information */}
+      
       <div className="goal-details">
         <p>Category: {goal.category}</p>
         <p>Target: Ksh {goal.targetAmount.toLocaleString()}</p>
@@ -53,18 +59,15 @@ function GoalCard({ goal, onDelete, onDeposit }) {
         <p>Remaining: Ksh {remainingAmount.toLocaleString()}</p>
         <p>Deadline: {new Date(goal.deadline).toLocaleDateString()}</p>
         
-        {/* Status messages */}
-        {isCompleted && <p className="status completed">Goal Completed! 🎉</p>}
-        {isOverdue && <p className="status overdue">Overdue ⚠️</p>}
-        {isWarning && <p className="status warning">Deadline approaching! ⏰</p>}
+        {isCompleted && <p className="status completed">Goal Completed! </p>}
+        {isOverdue && <p className="status overdue">Overdue </p>}
+        {isWarning && <p className="status warning">Deadline approaching! </p>}
         
-        {/* Show days left if not overdue or completed */}
         {!isOverdue && !isCompleted && (
           <p>Days left: {daysLeft}</p>
         )}
       </div>
 
-      {/* Progress bar */}
       <div className="progress-bar-container">
         <div 
           className="progress-bar" 
@@ -73,7 +76,6 @@ function GoalCard({ goal, onDelete, onDeposit }) {
         <span className="progress-text">{progressPercent}%</span>
       </div>
 
-      {/* Action buttons */}
       <div className="goal-actions">
         <button onClick={() => setShowDepositForm(!showDepositForm)}>
           {showDepositForm ? 'Cancel' : 'Add Money'}
