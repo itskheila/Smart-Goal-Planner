@@ -37,7 +37,7 @@ function GoalForm({ onAddGoal }) {
       deadline: deadline
     };
     
-    // Call the onAddGoal function passed from the parent component to add the new goal
+    
     onAddGoal(newGoal);
     
     

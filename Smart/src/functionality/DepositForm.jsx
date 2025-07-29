@@ -7,7 +7,7 @@ function DepositForm({ goals, onDeposit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Validating form using if-else statement
+    
     if (selectedGoal === '') {
       alert('Please select a goal');
       return;
@@ -18,7 +18,7 @@ function DepositForm({ goals, onDeposit }) {
       return;
     }
     
-    // If everything is valid, submit the form
+   
     onDeposit(selectedGoal, Number(amount));
     
     

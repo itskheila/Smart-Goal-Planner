@@ -26,7 +26,7 @@ function OverviewPanel({ goals }) {
     const deadlineDate = new Date(goal.deadline);
     const daysLeft = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
     
-    //  To check if goal is approaching deadline
+    
     if (daysLeft <= 30 && daysLeft > 0 && goal.savedAmount < goal.targetAmount) {
       approachingDeadlines = approachingDeadlines + 1;
     }
@@ -38,7 +38,7 @@ function OverviewPanel({ goals }) {
     const goal = goals[i];
     const deadlineDate = new Date(goal.deadline);
     
-    // Check if goal is overdue
+   
     if (deadlineDate < today && goal.savedAmount < goal.targetAmount) {
       overdueGoals = overdueGoals + 1;
     }
