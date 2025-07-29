@@ -1,11 +1,16 @@
-import PropTypes from 'prop-types';
 import GoalCard from './GoalCard';
 
-const GoalList = ({ goals, onDeleteGoal, onDepositToGoal }) => {
+function GoalList({ goals, onDeleteGoal, onDepositToGoal }) {
+  // If no goals exist, show a message
   if (goals.length === 0) {
-    return <p className="no-goals">No goals found. Add a new goal to get started!</p>;
+    return (
+      <div className="no-goals">
+        <p>No goals yet! Add your first goal to get started.</p>
+      </div>
+    );
   }
 
+  // Show all goals as cards
   return (
     <div className="goal-list">
       {goals.map(goal => (
@@ -18,12 +23,6 @@ const GoalList = ({ goals, onDeleteGoal, onDepositToGoal }) => {
       ))}
     </div>
   );
-};
-
-GoalList.propTypes = {
-  goals: PropTypes.array.isRequired,
-  onDeleteGoal: PropTypes.func.isRequired,
-  onDepositToGoal: PropTypes.func.isRequired
-};
+}
 
 export default GoalList;

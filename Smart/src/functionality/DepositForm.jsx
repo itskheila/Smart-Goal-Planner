@@ -1,69 +1,56 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 
-const DepositForm = ({ goals, onDeposit }) => {
-  const [formData, setFormData] = useState({
-    goalId: '',
-    amount: ''
-  });
+function DepositForm({ goals, onDeposit }) {
+  
+  const [selectedGoal, setSelectedGoal] = useState('');
+  const [amount, setAmount] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: name === 'amount' ? (value ? Number(value) : '') : value
-    }));
-  };
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    if (formData.goalId && formData.amount > 0) {
-      // Call the onDeposit function passed from parent
-      onDeposit(formData.goalId, formData.amount);
+    
+    if (selectedGoal && amount > 0) {
       
-      // Reset the form
-      setFormData({
-        goalId: '',
-        amount: ''
-      });
+      onDeposit(selectedGoal, Number(amount));
+      
+      setSelectedGoal('');
+      setAmount('');
     }
   };
 
   return (
     <div className="deposit-form-container">
       <h2>Make a Deposit</h2>
-      <form onSubmit={handleSubmit} className="deposit-form">
+      <form onSubmit={handleSubmit}>
+        
+        {/* Goal selection dropdown */}
         <div className="form-group">
-          <label htmlFor="goalId">Select Goal:</label>
+          <label>Select Goal:</label>
           <select
-            id="goalId"
-            name="goalId"
-            value={formData.goalId}
-            onChange={handleChange}
+            value={selectedGoal}
+            onChange={(e) => setSelectedGoal(e.target.value)}
             required
           >
-            <option value="">Select a goal</option>
+            <option value="">Choose a goal</option>
             {goals.map(goal => (
               <option key={goal.id} value={goal.id}>
-                {goal.name} (Ksh {goal.savedAmount.toLocaleString()} / Ksh {goal.targetAmount.toLocaleString()})
+                {goal.name} (Ksh {goal.savedAmount} / Ksh {goal.targetAmount})
               </option>
             ))}
           </select>
         </div>
 
+        {/* Amount input */}
         <div className="form-group">
-          <label htmlFor="amount">Amount (Ksh):</label>
+          <label>Amount (Ksh):</label>
           <input
             type="number"
-            id="amount"
-            name="amount"
-            value={formData.amount}
-            onChange={handleChange}
-            required
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Enter amount"
             min="1"
-            step="any"
-            placeholder="e.g., 100"
+            required
           />
         </div>
 
@@ -71,11 +58,6 @@ const DepositForm = ({ goals, onDeposit }) => {
       </form>
     </div>
   );
-};
-
-DepositForm.propTypes = {
-  goals: PropTypes.array.isRequired,
-  onDeposit: PropTypes.func.isRequired
-};
+}
 
 export default DepositForm;

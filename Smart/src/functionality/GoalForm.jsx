@@ -1,89 +1,76 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 
-const GoalForm = ({ onAddGoal }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    targetAmount: '',
-    category: '',
-    deadline: ''
-  });
+function GoalForm({ onAddGoal }) {
+  // Simple state for each form field
+  const [goalName, setGoalName] = useState('');
+  const [targetAmount, setTargetAmount] = useState('');
+  const [category, setCategory] = useState('');
+  const [deadline, setDeadline] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: name === 'targetAmount' ? (value ? Number(value) : '') : value
-    }));
-  };
-
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Creation of a new goal object
+    // Create a new goal object
     const newGoal = {
-      ...formData,
-      savedAmount: 0,
-      createdAt: new Date().toISOString().split('T')[0]
+      name: goalName,
+      targetAmount: Number(targetAmount),
+      category: category,
+      deadline: deadline
     };
     
-    // Calling the onAddGoal function passed from parent
+    // Send to parent component
     onAddGoal(newGoal);
     
-    // Resetting the form
-    setFormData({
-      name: '',
-      targetAmount: '',
-      category: '',
-      deadline: ''
-    });
+    // Clear all form fields
+    setGoalName('');
+    setTargetAmount('');
+    setCategory('');
+    setDeadline('');
   };
 
-  // Get today's date in YYYY-MM-DD format for min attribute
+  // Get today's date for minimum deadline
   const today = new Date().toISOString().split('T')[0];
 
   return (
     <div className="goal-form-container">
       <h2>Add New Goal</h2>
-      <form onSubmit={handleSubmit} className="goal-form">
+      <form onSubmit={handleSubmit}>
+        
+        {/* Goal name input */}
         <div className="form-group">
-          <label htmlFor="name">Goal Name:</label>
+          <label>Goal Name:</label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
+            value={goalName}
+            onChange={(e) => setGoalName(e.target.value)}
+            placeholder="e.g., Travel Fund"
             required
-            placeholder="e.g., Travel Fund, Emergency Fund"
           />
         </div>
 
+        {/* Target amount input */}
         <div className="form-group">
-          <label htmlFor="targetAmount">Target Amount (Ksh):</label>
+          <label>Target Amount (Ksh):</label>
           <input
             type="number"
-            id="targetAmount"
-            name="targetAmount"
-            value={formData.targetAmount}
-            onChange={handleChange}
-            required
-            min="1"
-            step="any"
+            value={targetAmount}
+            onChange={(e) => setTargetAmount(e.target.value)}
             placeholder="e.g., 5000"
+            min="1"
+            required
           />
         </div>
 
+        {/* Category selection */}
         <div className="form-group">
-          <label htmlFor="category">Category:</label>
+          <label>Category:</label>
           <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
             required
           >
-            <option value="">Select a category</option>
+            <option value="">Choose category</option>
             <option value="Travel">Travel</option>
             <option value="Emergency">Emergency</option>
             <option value="Electronics">Electronics</option>
@@ -97,16 +84,15 @@ const GoalForm = ({ onAddGoal }) => {
           </select>
         </div>
 
+        {/* Deadline input */}
         <div className="form-group">
-          <label htmlFor="deadline">Deadline:</label>
+          <label>Deadline:</label>
           <input
             type="date"
-            id="deadline"
-            name="deadline"
-            value={formData.deadline}
-            onChange={handleChange}
-            required
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
             min={today}
+            required
           />
         </div>
 
@@ -114,10 +100,6 @@ const GoalForm = ({ onAddGoal }) => {
       </form>
     </div>
   );
-};
-
-GoalForm.propTypes = {
-  onAddGoal: PropTypes.func.isRequired
-};
+}
 
 export default GoalForm;
