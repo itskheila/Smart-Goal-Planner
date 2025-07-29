@@ -1,17 +1,35 @@
 import { useState } from 'react';
 
 function GoalForm({ onAddGoal }) {
-  // Simple state for each form field
   const [goalName, setGoalName] = useState('');
   const [targetAmount, setTargetAmount] = useState('');
   const [category, setCategory] = useState('');
   const [deadline, setDeadline] = useState('');
 
-  // Handle form submission
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Create a new goal object
+    if (goalName === '') {
+      alert('Please enter a goal name');
+      return;
+    }
+    
+    if (targetAmount === '' || Number(targetAmount) <= 0) {
+      alert('Please enter a valid target amount');
+      return;
+    }
+    
+    if (category === '') {
+      alert('Please select a category');
+      return;
+    }
+    
+    if (deadline === '') {
+      alert('Please select a deadline');
+      return;
+    }
+    
     const newGoal = {
       name: goalName,
       targetAmount: Number(targetAmount),
@@ -19,25 +37,53 @@ function GoalForm({ onAddGoal }) {
       deadline: deadline
     };
     
-    // Send to parent component
+    // Call the onAddGoal function passed from the parent component to add the new goal
     onAddGoal(newGoal);
     
-    // Clear all form fields
+    
     setGoalName('');
     setTargetAmount('');
     setCategory('');
     setDeadline('');
   };
 
-  // Get today's date for minimum deadline
-  const today = new Date().toISOString().split('T')[0];
+ 
+  const today = new Date();
+  const todayString = today.toISOString().split('T')[0];
+
+  
+  const categories = [
+    'Travel',
+    'Emergency', 
+    'Electronics',
+    'Real Estate',
+    'Vehicle',
+    'Education',
+    'Shopping',
+    'Retirement',
+    'Home',
+    'Other'
+  ];
+
+ 
+  let categoryOptions = [];
+  categoryOptions.push(
+    <option key="default" value="">Choose category</option>
+  );
+  
+  for (let i = 0; i < categories.length; i++) {
+    categoryOptions.push(
+      <option key={categories[i]} value={categories[i]}>
+        {categories[i]}
+      </option>
+    );
+  }
 
   return (
     <div className="goal-form-container">
       <h2>Add New Goal</h2>
       <form onSubmit={handleSubmit}>
         
-        {/* Goal name input */}
         <div className="form-group">
           <label>Goal Name:</label>
           <input
@@ -49,7 +95,6 @@ function GoalForm({ onAddGoal }) {
           />
         </div>
 
-        {/* Target amount input */}
         <div className="form-group">
           <label>Target Amount (Ksh):</label>
           <input
@@ -62,7 +107,6 @@ function GoalForm({ onAddGoal }) {
           />
         </div>
 
-        {/* Category selection */}
         <div className="form-group">
           <label>Category:</label>
           <select
@@ -70,28 +114,17 @@ function GoalForm({ onAddGoal }) {
             onChange={(e) => setCategory(e.target.value)}
             required
           >
-            <option value="">Choose category</option>
-            <option value="Travel">Travel</option>
-            <option value="Emergency">Emergency</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Real Estate">Real Estate</option>
-            <option value="Vehicle">Vehicle</option>
-            <option value="Education">Education</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Retirement">Retirement</option>
-            <option value="Home">Home</option>
-            <option value="Other">Other</option>
+            {categoryOptions}
           </select>
         </div>
 
-        {/* Deadline input */}
         <div className="form-group">
           <label>Deadline:</label>
           <input
             type="date"
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
-            min={today}
+            min={todayString}
             required
           />
         </div>

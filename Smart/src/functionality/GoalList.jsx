@@ -1,7 +1,8 @@
 import GoalCard from './GoalCard';
 
 function GoalList({ goals, onDeleteGoal, onDepositToGoal }) {
-  // If no goals exist, show a message
+  
+  
   if (goals.length === 0) {
     return (
       <div className="no-goals">
@@ -10,17 +11,23 @@ function GoalList({ goals, onDeleteGoal, onDepositToGoal }) {
     );
   }
 
-  // Show all goals as cards
+  
+  let goalCards = [];
+  for (let i = 0; i < goals.length; i++) {
+    const goal = goals[i];
+    goalCards.push(
+      <GoalCard 
+        key={goal.id} 
+        goal={goal} 
+        onDelete={onDeleteGoal}
+        onDeposit={onDepositToGoal}
+      />
+    );
+  }
+
   return (
     <div className="goal-list">
-      {goals.map(goal => (
-        <GoalCard 
-          key={goal.id} 
-          goal={goal} 
-          onDelete={onDeleteGoal}
-          onDeposit={onDepositToGoal}
-        />
-      ))}
+      {goalCards}
     </div>
   );
 }

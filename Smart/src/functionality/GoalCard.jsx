@@ -1,30 +1,32 @@
 import { useState } from 'react';
 
 function GoalCard({ goal, onDelete, onDeposit }) {
-  
   const [showDepositForm, setShowDepositForm] = useState(false);
   const [depositAmount, setDepositAmount] = useState('');
 
-  // Calculate progress percentage
-  const progressPercent = Math.min(
-    Math.round((goal.savedAmount / goal.targetAmount) * 100),
-    100
-  );
+  let progressPercent = Math.round((goal.savedAmount / goal.targetAmount) * 100);
+  if (progressPercent > 100) {
+    progressPercent = 100;
+  }
   
- 
   const remainingAmount = goal.targetAmount - goal.savedAmount;
 
-  
   const today = new Date();
   const deadlineDate = new Date(goal.deadline);
   const daysLeft = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
 
- 
-  const isCompleted = goal.savedAmount >= goal.targetAmount;
-  const isOverdue = daysLeft < 0 && !isCompleted;
-  const isWarning = daysLeft <= 30 && daysLeft > 0 && !isCompleted;
+  let isCompleted = false;
+  let isOverdue = false;
+  let isWarning = false;
 
- 
+  if (goal.savedAmount >= goal.targetAmount) {
+    isCompleted = true;
+  } else if (daysLeft < 0) {
+    isOverdue = true;
+  } else if (daysLeft <= 30) {
+    isWarning = true;
+  }
+
   const handleDepositSubmit = (e) => {
     e.preventDefault();
     if (depositAmount && Number(depositAmount) > 0) {
@@ -34,23 +36,52 @@ function GoalCard({ goal, onDelete, onDeposit }) {
     }
   };
 
-  // Determine card styling based on status
-  const cardClass = (() => {
-    if (isCompleted) {
-      return 'goal-card completed';
-    } else if (isOverdue) {
-      return 'goal-card overdue';
-    } else if (isWarning) {
-      return 'goal-card warning';
-    } else {
-      return 'goal-card';
-    }
-  })();
+
+  let cardClass = 'goal-card';
+  if (isCompleted) {
+    cardClass = 'goal-card completed';
+  } else if (isOverdue) {
+    cardClass = 'goal-card overdue';
+  } else if (isWarning) {
+    cardClass = 'goal-card warning';
+  }
+
+  let statusMessage = null;
+  if (isCompleted) {
+    statusMessage = <p className="status completed">Goal Completed! 🎉</p>;
+  } else if (isOverdue) {
+    statusMessage = <p className="status overdue">Overdue ⚠️</p>;
+  } else if (isWarning) {
+    statusMessage = <p className="status warning">Deadline approaching! ⏰</p>;
+  }
+
+ 
+  let daysLeftMessage = null;
+  if (!isOverdue && !isCompleted) {
+    daysLeftMessage = <p>Days left: {daysLeft}</p>;
+  }
+
+ 
+  let depositFormSection = null;
+  if (showDepositForm) {
+    depositFormSection = (
+      <form onSubmit={handleDepositSubmit} className="deposit-form">
+        <input
+          type="number"
+          value={depositAmount}
+          onChange={(e) => setDepositAmount(e.target.value)}
+          placeholder="Enter amount"
+          min="1"
+          required
+        />
+        <button type="submit">Add Money</button>
+      </form>
+    );
+  }
 
   return (
     <div className={cardClass}>
       <h3>{goal.name}</h3>
-      
       
       <div className="goal-details">
         <p>Category: {goal.category}</p>
@@ -59,13 +90,8 @@ function GoalCard({ goal, onDelete, onDeposit }) {
         <p>Remaining: Ksh {remainingAmount.toLocaleString()}</p>
         <p>Deadline: {new Date(goal.deadline).toLocaleDateString()}</p>
         
-        {isCompleted && <p className="status completed">Goal Completed! </p>}
-        {isOverdue && <p className="status overdue">Overdue </p>}
-        {isWarning && <p className="status warning">Deadline approaching! </p>}
-        
-        {!isOverdue && !isCompleted && (
-          <p>Days left: {daysLeft}</p>
-        )}
+        {statusMessage}
+        {daysLeftMessage}
       </div>
 
       <div className="progress-bar-container">
@@ -83,20 +109,7 @@ function GoalCard({ goal, onDelete, onDeposit }) {
         <button onClick={() => onDelete(goal.id)}>Delete Goal</button>
       </div>
 
-      {/* Deposit form (shows when button is clicked) */}
-      {showDepositForm && (
-        <form onSubmit={handleDepositSubmit} className="deposit-form">
-          <input
-            type="number"
-            value={depositAmount}
-            onChange={(e) => setDepositAmount(e.target.value)}
-            placeholder="Enter amount"
-            min="1"
-            required
-          />
-          <button type="submit">Add Money</button>
-        </form>
-      )}
+      {depositFormSection}
     </div>
   );
 }
